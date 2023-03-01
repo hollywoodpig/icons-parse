@@ -1,0 +1,17 @@
+{
+	"name": "icon-parser",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index"
+	},
+	"keywords": [],
+	"type": "module",
+	"author": "hollywoodpig",
+	"license": "ISC",
+	"devDependencies": {
+		"glob": "^9.1.0",
+		"translatte": "^3.0.1"
+	}
+}
