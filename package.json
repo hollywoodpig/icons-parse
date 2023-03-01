@@ -12,6 +12,6 @@
 	"license": "ISC",
 	"devDependencies": {
 		"glob": "^9.1.0",
-		"translatte": "^3.0.1"
+		"translate": "^1.4.1"
 	}
 }

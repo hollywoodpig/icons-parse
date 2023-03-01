@@ -1,42 +1,68 @@
 import glob from 'glob';
-import translatte from 'translatte';
+import translate from 'translate';
 import path from 'path';
 import fs from 'fs/promises';
 
-const iconsParse = async ({ source, dest, mock }) => {
+function* chunkify(arr, n) {
+	for (let i = 0; i < arr.length; i += n) {
+		yield arr.slice(i, i + n);
+	}
+}
+
+async function iconsParse({ source, dest }) {
 	try {
-		const files = await glob(source);
+		const tags = [];
 		const icons = [];
 
-		console.log('Начинаем перевод');
+		console.log('Ищем файлы');
+
+		const files = await glob(source);
+
+		for (const file of files) {
+			const name = path.basename(file);
+			const tag = name.replace('.svg', '').replaceAll('-', ' ');
+			const category = tag.includes('filled') ? 'filled' : 'outlined';
+			const item = {
+				name,
+				category,
+				tags: [],
+			};
+
+			tags.push(tag);
+			icons.push(item);
+		}
+
+		const chunkedTags = [...chunkify(tags, 500)];
+		const chunkedTranslatedTags = [];
 
 		let count = 0;
 
-		for (const file of files) {
-			const fileName = path.basename(file);
-			const name = fileName.replace('.svg', '');
+		for (const chunk of chunkedTags) {
+			const translatedChunk = await translate(chunk.join('; '), 'ru');
 
-			const { text: translatedName } = mock
-				? { text: 'translated' }
-				: await translatte(name, { to: 'ru' });
-
-			const category = name.includes('filled') ? 'filled' : 'outlined';
-			const tags = [...name.split('-'), ...translatedName.split('-')];
-
-			icons.push({
-				name,
-				category,
-				tags,
-			});
+			chunkedTranslatedTags.push(translatedChunk.split('; '));
 
 			count++;
+			const percent = ((count / chunkedTags.length) * 100).toFixed();
 
 			process.stdout.clearLine();
 			process.stdout.cursorTo(0);
-			process.stdout.write(`${count} из ${files.length}`);
+			process.stdout.write(`Переводим теги: ${percent}%`);
 		}
 
-		console.log('\nНачинаем записывать файлы');
+		console.log('\nЗаписываем файлы');
+
+		const translatedTags = chunkedTranslatedTags.flat();
+
+		icons.map((icon, index) => {
+			const tag = tags[index];
+			const translatedTag = translatedTags[index];
+			const allTags = [...tag.split(' '), ...translatedTag.split(' ')];
+
+			icon.tags = [...new Set(allTags)];
+
+			return icon;
+		});
 
 		const res = {
 			path: '/_s/images/svg/tabler/',
@@ -46,14 +72,13 @@ const iconsParse = async ({ source, dest, mock }) => {
 
 		await fs.writeFile(dest, JSON.stringify(res, null, 4));
 
-		console.log('Начинаем радоваться, что этот ад закончился');
+		console.log('Готово');
 	} catch (e) {
 		console.error(e);
 	}
-};
+}
 
 iconsParse({
 	source: './icons/**/*.svg',
 	dest: './dest/tabler.json',
-	mock: true,
 });
