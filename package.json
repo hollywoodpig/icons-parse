@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "node index"
+		"start": "node --no-warnings index"
 	},
 	"keywords": [],
 	"type": "module",
@@ -12,6 +12,7 @@
 	"license": "ISC",
 	"devDependencies": {
 		"glob": "^9.1.0",
-		"translate": "^1.4.1"
+		"replace-in-file": "^6.3.5",
+		"translate-google": "^1.5.0"
 	}
 }
