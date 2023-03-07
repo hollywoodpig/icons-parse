@@ -37,8 +37,8 @@ export async function translateArray(arr, mock) {
 	return translatedChunks.flat();
 }
 
-export async function formatIcons(name) {
-	const files = await glob(`packs/${name}/svg/*.svg`);
+export async function formatIcons(source, name) {
+	const files = await glob(source);
 
 	await fs.mkdir(`dest/${name}`, { recursive: true });
 

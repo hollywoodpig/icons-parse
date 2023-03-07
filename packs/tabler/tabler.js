@@ -39,7 +39,7 @@ export async function tabler() {
 
 		console.log(' -Форматируем иконки');
 
-		await formatIcons('tabler');
+		await formatIcons(`packs/tabler/svg/*.svg`, 'tabler');
 
 		console.log(' -Готово');
 	} catch (e) {
