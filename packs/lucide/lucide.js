@@ -5,6 +5,8 @@ import { translateArray, formatIcons } from '../../helpers.js';
 
 export async function lucide() {
 	try {
+		console.log('Lucide:');
+
 		const files = await glob('packs/lucide/icons/*.json');
 		const icons = [];
 
@@ -47,7 +49,7 @@ export async function lucide() {
 
 		console.log(' -Форматируем иконки');
 
-		await formatIcons(`packs/lucide/icons/*.svg`, 'lucide');
+		await formatIcons('packs/lucide/icons/*.svg', 'lucide');
 
 		console.log(' -Готово');
 	} catch (e) {
