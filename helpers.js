@@ -20,7 +20,7 @@ export async function translateText(query) {
 	return translated;
 }
 
-export async function translateArray(arr, mock) {
+export async function translateArray(arr, mock = true) {
 	const chunks = [...chunkify(arr, 10)];
 	const translatedChunks = [];
 

@@ -41,7 +41,7 @@ export async function remix() {
 		console.log(' -Переводим теги');
 
 		const tags = icons.map(({ tags }) => tags.join(', '));
-		const translatedTags = await translateArray(tags, true);
+		const translatedTags = await translateArray(tags);
 
 		console.log(' -Записываем JSON');
 

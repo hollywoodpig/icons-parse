@@ -15,7 +15,7 @@ export async function tabler() {
 		console.log(' -Переводим теги');
 
 		const tags = icons.map(({ tags }) => tags.join(', '));
-		const translatedTags = await translateArray(tags, true);
+		const translatedTags = await translateArray(tags);
 
 		console.log(' -Записываем JSON');
 
@@ -39,7 +39,7 @@ export async function tabler() {
 
 		console.log(' -Форматируем иконки');
 
-		await formatIcons(`packs/tabler/svg/*.svg`, 'tabler');
+		await formatIcons(`packs/tabler/icons/*.svg`, 'tabler');
 
 		console.log(' -Готово');
 	} catch (e) {
