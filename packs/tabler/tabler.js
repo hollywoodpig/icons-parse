@@ -15,7 +15,7 @@ export async function tabler() {
 		console.log(' -Переводим теги');
 
 		const tags = icons.map(({ tags }) => tags.join(', '));
-		const translatedTags = await translateArray(tags, false);
+		const translatedTags = await translateArray(tags, true);
 
 		console.log(' -Записываем JSON');
 

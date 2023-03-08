@@ -1,5 +1,6 @@
-import { tabler, lucide, remix } from './packs/index.js';
+import { tabler, lucide, remix, material } from './packs/index.js';
 
 // tabler();
 // lucide();
-remix();
+// remix();
+material();

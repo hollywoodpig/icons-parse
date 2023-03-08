@@ -1,6 +1,11 @@
+# Dev
 /node_modules
 /package-lock.json
 /.vscode
 /.idea
 
+# OS
 .DS_Store
+
+# Other
+/dest

@@ -39,18 +39,20 @@ export async function translateArray(arr, mock) {
 
 export async function formatIcons(source, name) {
 	const files = await glob(source);
+	const chunks = [...chunkify(files, 500)];
 
 	await fs.mkdir(`dest/${name}`, { recursive: true });
 
-	for (const file of files) {
-		const basename = path.basename(file);
+	for (const chunk of chunks) {
+		for (const file of chunk) {
+			const basename = path.basename(file);
 
-		await fs.copyFile(file, `dest/${name}/${basename}`);
+			await fs.copyFile(file, `dest/${name}/${basename}`);
+			await replace({
+				files: `dest/${name}/${basename}`,
+				from: '<svg',
+				to: '<svg id="icon"',
+			});
+		}
 	}
-
-	await replace({
-		files: `dest/${name}/*.svg`,
-		from: '<svg',
-		to: '<svg id="icon"',
-	});
 }
