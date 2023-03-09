@@ -46,7 +46,7 @@ export async function lucide() {
 			list: icons,
 		};
 
-		await formatJson('mingcute', res);
+		await formatJson('lucide', res);
 
 		console.log(' -Форматируем иконки');
 
