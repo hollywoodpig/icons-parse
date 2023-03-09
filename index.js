@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { tabler, lucide, remix, material } from './packs/index.js';
+import { tabler, lucide, remix, material, mingcute } from './packs/index.js';
 
 async function start() {
 	await fs.mkdir('dest', { recursive: true });
@@ -8,6 +8,7 @@ async function start() {
 	await lucide();
 	await remix();
 	await material();
+	await mingcute();
 }
 
 start();

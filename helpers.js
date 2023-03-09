@@ -45,7 +45,7 @@ export async function formatIcons(source, name) {
 
 	for (const chunk of chunks) {
 		for (const file of chunk) {
-			const basename = path.basename(file);
+			const basename = path.basename(file).replaceAll('_', '-');
 
 			await fs.copyFile(file, `dest/${name}/${basename}`);
 			await replace({
