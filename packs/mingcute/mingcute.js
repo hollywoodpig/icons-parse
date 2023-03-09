@@ -8,29 +8,32 @@ export async function mingcute() {
 	try {
 		console.log('Mingcute:');
 
-		const categoriesMap = new Map([
-			['line', 'Outlined'],
-			['fill', 'Filled'],
+		const variantsMap = new Map([
+			['line', 'outlined'],
+			['fill', 'filled'],
 		]);
 		const files = await glob('packs/mingcute/icons/**/*.svg');
 		const icons = [];
 
 		for (const file of files) {
 			const filename = path.basename(file).replaceAll('_', '-');
+			const category = path.basename(path.dirname(file));
 			const name = filename.replace('.svg', '');
-			const [_, key, category] = name.match(/^(.*)-(line|fill)$/) ?? [
+			const [_, key, variant] = name.match(/^(.*)-(line|fill)$/) ?? [
 				filename,
 				name,
 				'line',
 			];
-
+			const normalizedKey = key.toLowerCase();
+			const normalizedVariant = variantsMap.get(variant);
 			const tags = (mingcuteTags[key] ?? key.split('-')).filter(
 				(tag) => !/\p{Script=Hani}+/u.test(tag)
 			);
 
 			icons.push({
-				name: `${name}.svg`,
-				category: categoriesMap.get(category),
+				name: `${key}-${normalizedVariant}.svg`,
+				category,
+				variant: normalizedVariant,
 				tags,
 			});
 		}
@@ -54,6 +57,8 @@ export async function mingcute() {
 
 		const res = {
 			path: '/_s/images/svg/mingcute/',
+			categories: [...new Set(icons.map(({ category }) => category))],
+			variants: [...new Set(icons.map(({ variant }) => variant))],
 			list: icons,
 		};
 
@@ -61,7 +66,24 @@ export async function mingcute() {
 
 		console.log(' -Форматируем иконки');
 
-		await formatIcons('packs/mingcute/icons/**/*.svg', 'mingcute');
+		await formatIcons(
+			'packs/mingcute/icons/**/*.svg',
+			'mingcute',
+			(filename) => {
+				filename = filename.replaceAll('_', '-');
+
+				const name = filename.replace('.svg', '');
+				const [_, key, variant] = name.match(/^(.*)-(line|fill)$/) ?? [
+					filename,
+					name,
+					'line',
+				];
+				const normalizedKey = key.toLowerCase();
+				const normalizedVariant = variantsMap.get(variant);
+
+				return `${normalizedKey}-${normalizedVariant}.svg`;
+			}
+		);
 
 		console.log(' -Готово');
 	} catch (e) {

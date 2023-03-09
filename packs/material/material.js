@@ -8,17 +8,11 @@ export async function material() {
 	try {
 		console.log('Material:');
 
-		const tagsList = materialTags.icons.map(({ name, tags }) => ({
+		const tagsList = materialTags.icons.map(({ name, tags, categories }) => ({
 			name: name.replaceAll('_', '-'),
 			tags: tags.map((tag) => tag.toLowerCase()),
+			category: categories[0],
 		}));
-		const categoriesMap = new Map([
-			['filled', 'Filled'],
-			['outlined', 'Outlined'],
-			['round', 'Round'],
-			['sharp', 'Sharp'],
-			['two-tone', 'Two Tone'],
-		]);
 
 		const files = await glob('packs/material/icons/*.svg');
 		const icons = [];
@@ -26,15 +20,15 @@ export async function material() {
 		for (const file of files) {
 			const filename = path.basename(file);
 			const name = filename.replace('.svg', '');
-			const [_, key, category] = name.match(
+			const [_, key, variant] = name.match(
 				/^(.*)-(filled|outlined|round|sharp|two-tone)$/
 			);
-
-			const { tags } = tagsList.find((tag) => tag.name === key);
+			const { tags, category } = tagsList.find((tag) => tag.name === key);
 
 			icons.push({
 				name: `${name}.svg`,
-				category: categoriesMap.get(category),
+				category,
+				variant,
 				tags,
 			});
 		}
@@ -58,6 +52,8 @@ export async function material() {
 
 		const res = {
 			path: '/_s/images/svg/material/',
+			categories: [...new Set(icons.map(({ category }) => category))],
+			variants: [...new Set(icons.map(({ variant }) => variant))],
 			list: icons,
 		};
 

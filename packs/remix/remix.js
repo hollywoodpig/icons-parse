@@ -9,9 +9,9 @@ export async function remix() {
 		console.log('Remix:');
 
 		const tagsList = Object.assign(...Object.values(remixTags));
-		const categoriesMap = new Map([
-			['line', 'Outlined'],
-			['fill', 'Filled'],
+		const variantsMap = new Map([
+			['line', 'outlined'],
+			['fill', 'filled'],
 		]);
 
 		const files = await glob('packs/remix/icons/**/*.svg');
@@ -19,21 +19,23 @@ export async function remix() {
 
 		for (const file of files) {
 			const filename = path.basename(file);
+			const category = path.basename(path.dirname(file));
 			const name = filename.replace('.svg', '');
-			const [_, key, category] = name.match(/^(.*)-(line|fill)$/) ?? [
+			const [_, key, variant] = name.match(/^(.*)-(line|fill)$/) ?? [
 				filename,
 				name,
 				'line',
 			];
-
+			const normalizedVariant = variantsMap.get(variant);
 			const tags = tagsList[key].filter(
 				(tag) => !/\p{Script=Hani}+/u.test(tag)
 			);
 			const normalizedTags = tags.length ? tags : key.split('-');
 
 			icons.push({
-				name: `${name}.svg`,
-				category: categoriesMap.get(category),
+				name: `${key}-${variantsMap.get(variant)}.svg`,
+				category: category.toLowerCase(),
+				variant: normalizedVariant,
 				tags: normalizedTags,
 			});
 		}
@@ -57,6 +59,8 @@ export async function remix() {
 
 		const res = {
 			path: '/_s/images/svg/remix/',
+			categories: [...new Set(icons.map(({ category }) => category))],
+			variants: ['outlined', 'filled'],
 			list: icons,
 		};
 
@@ -64,7 +68,17 @@ export async function remix() {
 
 		console.log(' -Форматируем иконки');
 
-		await formatIcons('packs/remix/icons/**/*.svg', 'remix');
+		await formatIcons('packs/remix/icons/**/*.svg', 'remix', (filename) => {
+			const name = filename.replace('.svg', '');
+			const [_, key, variant] = name.match(/^(.*)-(line|fill)$/) ?? [
+				filename,
+				name,
+				'line',
+			];
+			const normalizedVariant = variantsMap.get(variant);
+
+			return `${key}-${normalizedVariant}.svg`;
+		});
 
 		console.log(' -Готово');
 	} catch (e) {

@@ -16,7 +16,7 @@ export async function lucide() {
 			const item = JSON.parse(raw);
 
 			icons.push({
-				name: filename,
+				name: filename.replace('.json', '.svg'),
 				category: item.categories[0],
 				tags: item.tags,
 			});
@@ -41,6 +41,7 @@ export async function lucide() {
 
 		const res = {
 			path: '/_s/images/svg/lucide/',
+			categories: [...new Set(icons.map(({ category }) => category))],
 			outline: [0.5, 1, 1.5, 2, 2.5, 3],
 			list: icons,
 		};

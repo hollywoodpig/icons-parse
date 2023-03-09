@@ -8,7 +8,7 @@ export async function tabler() {
 
 		const icons = Object.values(tablerTags).map((item) => ({
 			name: `${item.name}.svg`,
-			category: item.category || 'Other',
+			category: item.category.toLowerCase() || 'other',
 			tags: item.tags,
 		}));
 
@@ -31,6 +31,7 @@ export async function tabler() {
 
 		const res = {
 			path: '/_s/images/svg/tabler/',
+			categories: [...new Set(icons.map(({ category }) => category))],
 			outline: [1, 1.25, 1.5, 1.75, 2],
 			list: icons,
 		};
