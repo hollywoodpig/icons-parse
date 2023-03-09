@@ -1,7 +1,7 @@
 import glob from 'glob';
 import fs from 'fs/promises';
 import path from 'path';
-import { translateArray, formatIcons } from '../../helpers.js';
+import { translateArray, formatIcons, formatJson } from '../../helpers.js';
 
 export async function lucide() {
 	try {
@@ -27,7 +27,7 @@ export async function lucide() {
 		const tags = icons.map(({ tags }) => tags.join(', '));
 		const translatedTags = await translateArray(tags);
 
-		console.log(' -Записываем JSON');
+		console.log(' -Форматируем JSON');
 
 		icons.map((icon, index) => {
 			const regular = tags[index].toLowerCase().split(', ');
@@ -46,7 +46,7 @@ export async function lucide() {
 			list: icons,
 		};
 
-		await fs.writeFile('dest/lucide.json', JSON.stringify(res, null, 4));
+		await formatJson('mingcute', res);
 
 		console.log(' -Форматируем иконки');
 

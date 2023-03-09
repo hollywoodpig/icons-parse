@@ -1,6 +1,7 @@
 import translate from 'translate';
 import path from 'path';
 import glob from 'glob';
+import minifyJson from 'node-json-minify';
 import { exec } from 'child_process';
 import fs from 'fs/promises';
 
@@ -59,4 +60,13 @@ export async function formatIcons(source, pack, normalizeFilename) {
 
 	// Оптимизируем svg
 	exec(`npx svgo -f dest/${pack}`);
+}
+
+export async function formatJson(pack, res) {
+	const json = JSON.stringify(res, null, 4);
+	const minified = minifyJson(json);
+
+	await fs.writeFile(`dest/${pack}.json`, minified);
+
+	return minified;
 }

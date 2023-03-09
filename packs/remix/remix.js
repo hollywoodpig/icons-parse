@@ -1,8 +1,7 @@
 import glob from 'glob';
 import path from 'path';
-import fs from 'fs/promises';
 import remixTags from './tags.json' assert { type: 'json' };
-import { translateArray, formatIcons } from '../../helpers.js';
+import { translateArray, formatIcons, formatJson } from '../../helpers.js';
 
 export async function remix() {
 	try {
@@ -45,7 +44,7 @@ export async function remix() {
 		const tags = icons.map(({ tags }) => tags.join(', '));
 		const translatedTags = await translateArray(tags);
 
-		console.log(' -Записываем JSON');
+		console.log(' -Форматируем JSON');
 
 		icons.map((icon, index) => {
 			const regular = tags[index].toLowerCase().split(', ');
@@ -64,7 +63,7 @@ export async function remix() {
 			list: icons,
 		};
 
-		await fs.writeFile('dest/remix.json', JSON.stringify(res, null, 4));
+		await formatJson('remix', res);
 
 		console.log(' -Форматируем иконки');
 

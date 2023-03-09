@@ -1,5 +1,4 @@
-import fs from 'fs/promises';
-import { formatIcons, translateArray } from '../../helpers.js';
+import { formatIcons, translateArray, formatJson } from '../../helpers.js';
 import tablerTags from './tags.json' assert { type: 'json' };
 
 export async function tabler() {
@@ -17,7 +16,7 @@ export async function tabler() {
 		const tags = icons.map(({ tags }) => tags.join(', '));
 		const translatedTags = await translateArray(tags);
 
-		console.log(' -Записываем JSON');
+		console.log(' -Форматируем JSON');
 
 		icons.map((icon, index) => {
 			const regular = tags[index].toLowerCase().split(', ');
@@ -36,7 +35,7 @@ export async function tabler() {
 			list: icons,
 		};
 
-		await fs.writeFile('dest/tabler.json', JSON.stringify(res, null, 4));
+		await formatJson('tabler', res);
 
 		console.log(' -Форматируем иконки');
 
