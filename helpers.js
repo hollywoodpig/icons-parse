@@ -46,6 +46,7 @@ export async function formatIcons(source, pack, normalizeFilename) {
 	for (const chunk of chunks) {
 		for (const file of chunk) {
 			const filename = path.basename(file);
+
 			let normalizedFilename = filename;
 
 			if (typeof normalizeFilename === 'function') {
@@ -53,10 +54,19 @@ export async function formatIcons(source, pack, normalizeFilename) {
 			}
 
 			await fs.copyFile(file, `dest/${pack}/${normalizedFilename}`);
+
+			// Добавляем id="icon"
 			await replace({
 				files: `dest/${pack}/${normalizedFilename}`,
 				from: '<svg',
 				to: '<svg id="icon"',
+			});
+
+			// Избавляемся от атрибутов ширины и высоты
+			await replace({
+				files: `dest/${pack}/${normalizedFilename}`,
+				from: /\swidth="\w+"|\sheight="\w+"/gm,
+				to: '',
 			});
 		}
 	}
