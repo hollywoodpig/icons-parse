@@ -1,7 +1,7 @@
 import translate from 'translate';
 import path from 'path';
 import glob from 'glob';
-import replace from 'replace-in-file';
+import { exec } from 'child_process';
 import fs from 'fs/promises';
 
 export function* chunkify(arr, n) {
@@ -54,20 +54,9 @@ export async function formatIcons(source, pack, normalizeFilename) {
 			}
 
 			await fs.copyFile(file, `dest/${pack}/${normalizedFilename}`);
-
-			// Добавляем id="icon"
-			await replace({
-				files: `dest/${pack}/${normalizedFilename}`,
-				from: '<svg',
-				to: '<svg id="icon"',
-			});
-
-			// Избавляемся от атрибутов ширины и высоты
-			await replace({
-				files: `dest/${pack}/${normalizedFilename}`,
-				from: /\swidth="\w+"|\sheight="\w+"/gm,
-				to: '',
-			});
 		}
 	}
+
+	// Оптимизируем svg
+	exec(`npx svgo -f dest/${pack}`);
 }
