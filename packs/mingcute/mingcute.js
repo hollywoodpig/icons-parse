@@ -30,7 +30,7 @@ export async function mingcute() {
 			);
 
 			icons.push({
-				name: `${key}-${normalizedVariant}.svg`,
+				name: `${normalizedKey}-${normalizedVariant}.svg`,
 				category,
 				variant: normalizedVariant,
 				tags,
