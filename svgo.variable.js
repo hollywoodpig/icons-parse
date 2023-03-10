@@ -5,7 +5,7 @@ export default {
 		{
 			name: 'addAttributesToSVGElement',
 			params: {
-				attributes: ['id="icon"'],
+				attributes: ['id="icon"', 'style="stroke-width: var(--stroke, 2);"'],
 			},
 		},
 		{

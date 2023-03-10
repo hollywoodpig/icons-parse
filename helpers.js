@@ -59,7 +59,9 @@ export async function formatIcons(source, pack, normalizeFilename) {
 	}
 
 	// Оптимизируем svg
-	exec(`npx svgo -f dest/${pack}`);
+	const config = ['lucide', 'tabler'].includes(pack) ? 'variable' : 'config';
+
+	exec(`npx svgo -f dest/${pack} --config ./svgo.${config}.js`);
 }
 
 export async function formatJson(pack, res) {
