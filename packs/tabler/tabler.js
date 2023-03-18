@@ -31,7 +31,11 @@ export async function tabler() {
 		const res = {
 			path: '/_s/images/svg/tabler/',
 			categories: [...new Set(icons.map(({ category }) => category))],
-			outline: [1, 1.25, 1.5, 1.75, 2],
+			outline: {
+				min: 1,
+				max: 2,
+				step: 0.25,
+			},
 			list: icons,
 		};
 
